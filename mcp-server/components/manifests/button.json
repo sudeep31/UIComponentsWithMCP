@@ -1,0 +1,18 @@
+{
+  "name": "Button",
+  "tag": "cl-button",
+  "description": "Triggers actions and events. Supports four visual variants, three sizes, loading state, and full-width layout.",
+  "props": [
+    { "name": "variant", "type": "'primary' | 'secondary' | 'ghost' | 'danger'", "default": "'primary'", "description": "Visual style variant" },
+    { "name": "size", "type": "'sm' | 'md' | 'lg'", "default": "'md'", "description": "Size preset" },
+    { "name": "label", "type": "string", "default": null, "description": "Button label text (or use children)" },
+    { "name": "loading", "type": "boolean", "default": false, "description": "Shows spinner and disables interaction" },
+    { "name": "fullWidth", "type": "boolean", "default": false, "description": "Stretches to container width" },
+    { "name": "disabled", "type": "boolean", "default": false, "description": "Native disabled state" },
+    { "name": "onClick", "type": "(e: MouseEvent) => void", "default": null, "description": "Click handler" }
+  ],
+  "snippets": {
+    "react": "import { Button } from '@cl/react';\n\n<Button variant=\"primary\" label=\"Save\" onClick={() => console.log('clicked')} />",
+    "webcomponent": "<cl-button label=\"Save\" variant=\"primary\"></cl-button>\n\n<script>\n  document.querySelector('cl-button').addEventListener('click', () => {\n    console.log('clicked');\n  });\n</script>"
+  }
+}

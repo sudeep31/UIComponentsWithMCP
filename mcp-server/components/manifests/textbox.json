@@ -1,0 +1,21 @@
+{
+  "name": "TextBox",
+  "tag": "cl-textbox",
+  "description": "Single-line text input with optional label, helper text, and validation error display.",
+  "props": [
+    { "name": "label", "type": "string", "default": null, "description": "Field label rendered above the input" },
+    { "name": "placeholder", "type": "string", "default": null, "description": "Input placeholder text" },
+    { "name": "value", "type": "string", "default": null, "description": "Controlled value" },
+    { "name": "defaultValue", "type": "string", "default": null, "description": "Uncontrolled default value" },
+    { "name": "error", "type": "string", "default": null, "description": "Validation error message displayed below the input" },
+    { "name": "helperText", "type": "string", "default": null, "description": "Helper text rendered below the input" },
+    { "name": "disabled", "type": "boolean", "default": false, "description": "Disables the input" },
+    { "name": "readOnly", "type": "boolean", "default": false, "description": "Makes the input read-only" },
+    { "name": "required", "type": "boolean", "default": false, "description": "Marks the field as required" },
+    { "name": "onChange", "type": "(value: string) => void", "default": null, "description": "Called with the string value on every change" }
+  ],
+  "snippets": {
+    "react": "import { TextBox } from '@cl/react';\nimport { useState } from 'react';\n\nconst [value, setValue] = useState('');\n\n<TextBox\n  label=\"Name\"\n  placeholder=\"Enter your name\"\n  value={value}\n  onChange={setValue}\n/>",
+    "webcomponent": "<cl-textbox label=\"Name\" placeholder=\"Enter your name\"></cl-textbox>\n\n<script>\n  document.querySelector('cl-textbox').addEventListener('change', (e) => {\n    console.log('value:', e.detail);\n  });\n</script>"
+  }
+}

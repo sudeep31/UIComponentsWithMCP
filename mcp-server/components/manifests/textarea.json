@@ -1,0 +1,25 @@
+{
+  "name": "TextArea",
+  "tag": "cl-textarea",
+  "description": "Multi-line text input with configurable rows, resize behaviour, character count, and validation.",
+  "props": [
+    { "name": "label", "type": "string", "default": null, "description": "Field label" },
+    { "name": "placeholder", "type": "string", "default": null, "description": "Placeholder text" },
+    { "name": "value", "type": "string", "default": null, "description": "Controlled value" },
+    { "name": "defaultValue", "type": "string", "default": null, "description": "Uncontrolled default value" },
+    { "name": "rows", "type": "number", "default": 4, "description": "Initial visible row count" },
+    { "name": "resize", "type": "'none' | 'vertical' | 'horizontal' | 'both'", "default": "'vertical'", "description": "CSS resize handle direction" },
+    { "name": "showCount", "type": "boolean", "default": false, "description": "Show character count display" },
+    { "name": "maxLength", "type": "number", "default": null, "description": "Max character count; activates counter display when showCount is true" },
+    { "name": "error", "type": "string", "default": null, "description": "Validation error message" },
+    { "name": "helperText", "type": "string", "default": null, "description": "Helper text below textarea" },
+    { "name": "disabled", "type": "boolean", "default": false, "description": "Disables the textarea" },
+    { "name": "readOnly", "type": "boolean", "default": false, "description": "Read-only mode" },
+    { "name": "required", "type": "boolean", "default": false, "description": "Required field marker" },
+    { "name": "onChange", "type": "(value: string) => void", "default": null, "description": "Called with the string value on every change" }
+  ],
+  "snippets": {
+    "react": "import { TextArea } from '@cl/react';\nimport { useState } from 'react';\n\nconst [text, setText] = useState('');\n\n<TextArea\n  label=\"Bio\"\n  placeholder=\"Tell us about yourself…\"\n  value={text}\n  onChange={setText}\n  rows={4}\n  showCount\n  maxLength={280}\n/>",
+    "webcomponent": "<cl-textarea label=\"Notes\" rows=\"4\" placeholder=\"Add notes…\"></cl-textarea>\n\n<script>\n  document.querySelector('cl-textarea').addEventListener('change', (e) => {\n    console.log('value:', e.detail);\n  });\n</script>"
+  }
+}

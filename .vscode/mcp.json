@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "cl-components": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/mcp-server/.venv/Scripts/python",
+      "args": ["${workspaceFolder}/mcp-server/main.py"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}

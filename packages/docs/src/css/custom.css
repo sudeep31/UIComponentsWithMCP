@@ -1,0 +1,27 @@
+/**
+ * CL Component Library — Docusaurus theme overrides
+ * Brand colors match design tokens: primary #4f81f5 (soft blue)
+ */
+
+:root {
+  --ifm-color-primary: #4f81f5;
+  --ifm-color-primary-dark: #2d5dd4;
+  --ifm-color-primary-darker: #2653c4;
+  --ifm-color-primary-darkest: #1e42a0;
+  --ifm-color-primary-light: #7ba3f8;
+  --ifm-color-primary-lighter: #9bbafa;
+  --ifm-color-primary-lightest: #c5d6fd;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(79, 129, 245, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #7ba3f8;
+  --ifm-color-primary-dark: #4f81f5;
+  --ifm-color-primary-darker: #2d5dd4;
+  --ifm-color-primary-darkest: #2653c4;
+  --ifm-color-primary-light: #9bbafa;
+  --ifm-color-primary-lighter: #c5d6fd;
+  --ifm-color-primary-lightest: #ebf0fe;
+  --docusaurus-highlighted-code-line-bg: rgba(79, 129, 245, 0.3);
+}

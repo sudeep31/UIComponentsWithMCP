@@ -1,0 +1,22 @@
+{
+  "name": "@cl/tokens",
+  "version": "1.0.0",
+  "description": "CL design tokens — Style Dictionary source",
+  "type": "module",
+  "scripts": {
+    "build": "node sd.config.js",
+    "dev": "node sd.config.js --watch"
+  },
+  "exports": {
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.json"
+  },
+  "files": ["dist"],
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.32.1",
+  "devDependencies": {
+    "style-dictionary": "^5.4.0"
+  }
+}

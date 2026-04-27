@@ -1,0 +1,18 @@
+{
+  "name": "List",
+  "tag": "cl-list",
+  "description": "Renders an ordered, unordered, or descriptive list with optional selection, dividers, and compact spacing.",
+  "props": [
+    { "name": "items", "type": "Array<{ id: string; label: string; description?: string }>", "default": "[]", "description": "Array of list items to render" },
+    { "name": "variant", "type": "'unordered' | 'ordered' | 'descriptive'", "default": "'unordered'", "description": "List rendering mode (ul / ol / dl)" },
+    { "name": "selectable", "type": "boolean", "default": false, "description": "Makes items clickable and highlights the selected item" },
+    { "name": "selectedId", "type": "string", "default": null, "description": "ID of the currently selected item" },
+    { "name": "dividers", "type": "boolean", "default": false, "description": "Show visual dividers between items" },
+    { "name": "compact", "type": "boolean", "default": false, "description": "Reduces vertical padding on items" },
+    { "name": "onSelect", "type": "(id: string) => void", "default": null, "description": "Called with the item id when a selectable item is clicked" }
+  ],
+  "snippets": {
+    "react": "import { List } from '@cl/react';\nimport type { ListItem } from '@cl/react';\nimport { useState } from 'react';\n\nconst items: ListItem[] = [\n  { id: '1', label: 'Item one' },\n  { id: '2', label: 'Item two' },\n  { id: '3', label: 'Item three' },\n];\n\nconst [selected, setSelected] = useState('');\n\n<List\n  items={items}\n  selectable\n  selectedId={selected}\n  dividers\n  onSelect={setSelected}\n/>",
+    "webcomponent": "<!-- Arrays must be set via JS property, not HTML attribute -->\n<cl-list selectable dividers></cl-list>\n\n<script>\n  const list = document.querySelector('cl-list');\n  list.items = [\n    { id: '1', label: 'Item one' },\n    { id: '2', label: 'Item two' },\n  ];\n  list.addEventListener('select', (e) => console.log('selected id:', e.detail));\n</script>"
+  }
+}

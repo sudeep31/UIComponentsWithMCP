@@ -1,0 +1,20 @@
+{
+  "name": "Select",
+  "tag": "cl-select",
+  "description": "Dropdown picker that renders a styled native select with chevron icon, label, helper text, and error state.",
+  "props": [
+    { "name": "label", "type": "string", "default": null, "description": "Field label" },
+    { "name": "options", "type": "Array<{ value: string; label: string; disabled?: boolean }>", "default": "[]", "description": "Array of selectable options" },
+    { "name": "value", "type": "string", "default": null, "description": "Controlled selected value" },
+    { "name": "placeholder", "type": "string", "default": "'Select...'", "description": "Placeholder option shown when no value is selected" },
+    { "name": "error", "type": "string", "default": null, "description": "Validation error message" },
+    { "name": "helperText", "type": "string", "default": null, "description": "Helper text below select" },
+    { "name": "disabled", "type": "boolean", "default": false, "description": "Disables the select" },
+    { "name": "required", "type": "boolean", "default": false, "description": "Required field marker" },
+    { "name": "onChange", "type": "(value: string) => void", "default": null, "description": "Called with the selected option value" }
+  ],
+  "snippets": {
+    "react": "import { Select } from '@cl/react';\nimport type { SelectOption } from '@cl/react';\nimport { useState } from 'react';\n\nconst options: SelectOption[] = [\n  { value: 'a', label: 'Option A' },\n  { value: 'b', label: 'Option B' },\n];\n\nconst [selected, setSelected] = useState('');\n\n<Select\n  label=\"Choose\"\n  options={options}\n  value={selected}\n  onChange={setSelected}\n/>",
+    "webcomponent": "<!-- Arrays must be set via JS property, not HTML attribute -->\n<cl-select label=\"Choose\" placeholder=\"Select...\"></cl-select>\n\n<script>\n  const sel = document.querySelector('cl-select');\n  sel.options = [\n    { value: 'a', label: 'Option A' },\n    { value: 'b', label: 'Option B' },\n  ];\n  sel.addEventListener('change', (e) => console.log('selected:', e.detail));\n</script>"
+  }
+}

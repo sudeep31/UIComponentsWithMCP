@@ -1,0 +1,90 @@
+/* =============================================================
+   CL Component Library — Global Styles
+   Imports design tokens and sets up Tailwind v4 theme mapping
+   ============================================================= */
+
+/* 1. Import @cl/tokens CSS custom properties */
+@import "../../tokens/dist/tokens.css";
+
+/* 2. Tailwind base layer */
+@import "tailwindcss";
+
+/* 3. Map CL design tokens into Tailwind v4 theme via @theme */
+@theme {
+  /* Colors */
+  --color-cl-primary:        var(--cl-color-primary);
+  --color-cl-primary-light:  var(--cl-color-primary-light);
+  --color-cl-primary-dark:   var(--cl-color-primary-dark);
+  --color-cl-secondary:      var(--cl-color-secondary);
+  --color-cl-secondary-light:var(--cl-color-secondary-light);
+
+  --color-cl-neutral-50:     var(--cl-color-neutral-50);
+  --color-cl-neutral-100:    var(--cl-color-neutral-100);
+  --color-cl-neutral-200:    var(--cl-color-neutral-200);
+  --color-cl-neutral-300:    var(--cl-color-neutral-300);
+  --color-cl-neutral-400:    var(--cl-color-neutral-400);
+  --color-cl-neutral-500:    var(--cl-color-neutral-500);
+  --color-cl-neutral-700:    var(--cl-color-neutral-700);
+  --color-cl-neutral-900:    var(--cl-color-neutral-900);
+
+  --color-cl-success:        var(--cl-color-success);
+  --color-cl-success-light:  var(--cl-color-success-light);
+  --color-cl-error:          var(--cl-color-error);
+  --color-cl-error-light:    var(--cl-color-error-light);
+  --color-cl-warning:        var(--cl-color-warning);
+  --color-cl-warning-light:  var(--cl-color-warning-light);
+  --color-cl-surface:        var(--cl-color-surface);
+  --color-cl-border:         var(--cl-color-border);
+  --color-cl-focus-ring:     var(--cl-color-focus-ring);
+
+  /* Spacing */
+  --spacing-cl-xs:   var(--cl-spacing-xs);
+  --spacing-cl-sm:   var(--cl-spacing-sm);
+  --spacing-cl-md:   var(--cl-spacing-md);
+  --spacing-cl-lg:   var(--cl-spacing-lg);
+  --spacing-cl-xl:   var(--cl-spacing-xl);
+  --spacing-cl-2xl:  var(--cl-spacing-2xl);
+  --spacing-cl-3xl:  var(--cl-spacing-3xl);
+  --spacing-cl-4xl:  var(--cl-spacing-4xl);
+
+  /* Typography */
+  --font-family-cl-base: var(--cl-font-family-base);
+  --font-family-cl-mono: var(--cl-font-family-mono);
+
+  --font-size-cl-xs:  var(--cl-font-size-xs);
+  --font-size-cl-sm:  var(--cl-font-size-sm);
+  --font-size-cl-md:  var(--cl-font-size-md);
+  --font-size-cl-lg:  var(--cl-font-size-lg);
+  --font-size-cl-xl:  var(--cl-font-size-xl);
+  --font-size-cl-2xl: var(--cl-font-size-2xl);
+
+  /* Border Radius */
+  --radius-cl-sm:   var(--cl-radius-sm);
+  --radius-cl-md:   var(--cl-radius-md);
+  --radius-cl-lg:   var(--cl-radius-lg);
+  --radius-cl-xl:   var(--cl-radius-xl);
+  --radius-cl-full: var(--cl-radius-full);
+
+  /* Shadows */
+  --shadow-cl-sm:    var(--cl-shadow-sm);
+  --shadow-cl-md:    var(--cl-shadow-md);
+  --shadow-cl-lg:    var(--cl-shadow-lg);
+  --shadow-cl-focus: var(--cl-shadow-focus);
+}
+
+/* 4. Base resets scoped to CL components */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* Apply CL font to all components */
+  .cl-component {
+    font-family: var(--cl-font-family-base);
+    font-size: var(--cl-font-size-md);
+    line-height: var(--cl-font-line-height-normal);
+    color: var(--cl-color-neutral-900);
+  }
+}

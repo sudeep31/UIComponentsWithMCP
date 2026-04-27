@@ -1,0 +1,20 @@
+{
+  "name": "@cl/root",
+  "version": "1.0.0",
+  "description": "CL Component Library — pnpm monorepo root",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --filter \"@cl/*\" build",
+    "build:tokens": "pnpm --filter @cl/tokens build",
+    "build:react": "pnpm --filter @cl/react build",
+    "build:wc": "pnpm --filter @cl/web-components build",
+    "dev:storybook": "pnpm --filter @cl/storybook dev",
+    "dev:docs": "pnpm --filter @cl/docs start",
+    "lint": "pnpm --filter \"@cl/*\" lint",
+    "clean": "pnpm --filter \"@cl/*\" exec -- rimraf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.32.1"
+}

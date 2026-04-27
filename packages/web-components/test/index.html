@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CL Web Components — Verification</title>
+
+  <!-- Load the self-contained custom elements bundle (includes React + Tailwind) -->
+  <link rel="stylesheet" href="../dist/custom-elements.css" />
+  <script type="module" src="../dist/custom-elements.js"></script>
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 24px;
+      background: #f9fafb;
+    }
+    section {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    h1 { color: #111827; }
+    h2 { color: #374151; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+    output { display: block; margin-top: 8px; font-size: 13px; color: #6b7280; }
+  </style>
+</head>
+<body>
+  <h1>CL Web Components — Verification</h1>
+  <p>All 6 custom elements rendered with zero framework dependencies.</p>
+
+  <!-- ── Button ─────────────────────────────────────────── -->
+  <section>
+    <h2>cl-button</h2>
+    <div class="row">
+      <cl-button label="Primary"   variant="primary"></cl-button>
+      <cl-button label="Secondary" variant="secondary"></cl-button>
+      <cl-button label="Ghost"     variant="ghost"></cl-button>
+      <cl-button label="Danger"    variant="danger"></cl-button>
+      <cl-button label="Small"     variant="primary" size="sm"></cl-button>
+      <cl-button label="Large"     variant="primary" size="lg"></cl-button>
+      <cl-button label="Loading"   variant="primary" loading="true"></cl-button>
+      <cl-button label="Disabled"  variant="primary" disabled="true"></cl-button>
+    </div>
+    <output id="btn-output">Click a button to see the event</output>
+    <script type="module">
+      document.querySelectorAll('cl-button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.getElementById('btn-output').textContent =
+            `Clicked: "${e.target.getAttribute('label')}" at ${new Date().toLocaleTimeString()}`
+        })
+      })
+    </script>
+  </section>
+
+  <!-- ── TextBox ────────────────────────────────────────── -->
+  <section>
+    <h2>cl-textbox</h2>
+    <div class="row">
+      <cl-textbox label="Username" placeholder="Enter username" width="240px"></cl-textbox>
+      <cl-textbox label="Required" placeholder="Required field" required="true" width="240px"></cl-textbox>
+      <cl-textbox label="With error" value="bad value" error="This field is invalid" width="240px"></cl-textbox>
+      <cl-textbox label="Disabled" value="Cannot edit" disabled="true" width="240px"></cl-textbox>
+    </div>
+    <output id="textbox-output">Type in a field to see the value</output>
+    <script type="module">
+      document.querySelectorAll('cl-textbox').forEach(input => {
+        input.addEventListener('change', (e) => {
+          document.getElementById('textbox-output').textContent =
+            `Value: "${e.target.value}"`
+        })
+      })
+    </script>
+  </section>
+
+  <!-- ── NumberBox ──────────────────────────────────────── -->
+  <section>
+    <h2>cl-numberbox</h2>
+    <div class="row">
+      <cl-numberbox label="Quantity" value="1" min="0" max="100" step="1" width="180px"></cl-numberbox>
+      <cl-numberbox label="Price" value="9.99" step="0.01" helperText="In USD" width="180px"></cl-numberbox>
+      <cl-numberbox label="Out of range" value="200" min="0" max="100" error="Must be 0–100" width="180px"></cl-numberbox>
+    </div>
+  </section>
+
+  <!-- ── Select ─────────────────────────────────────────── -->
+  <section>
+    <h2>cl-select</h2>
+    <div class="row" id="select-row"></div>
+    <output id="select-output">Select an option</output>
+    <script type="module">
+      const row = document.getElementById('select-row')
+
+      const sel = document.createElement('cl-select')
+      sel.setAttribute('label', 'Framework')
+      sel.setAttribute('placeholder', 'Choose a framework')
+      sel.setAttribute('width', '240px')
+      sel.options = [
+        { value: 'react',   label: 'React' },
+        { value: 'vue',     label: 'Vue' },
+        { value: 'angular', label: 'Angular' },
+        { value: 'svelte',  label: 'Svelte' },
+      ]
+      sel.addEventListener('change', (e) => {
+        document.getElementById('select-output').textContent = `Selected: ${e.target.value}`
+      })
+      row.appendChild(sel)
+
+      const selDisabled = document.createElement('cl-select')
+      selDisabled.setAttribute('label', 'Disabled')
+      selDisabled.setAttribute('width', '180px')
+      selDisabled.setAttribute('disabled', 'true')
+      selDisabled.options = [{ value: 'a', label: 'Option A' }]
+      row.appendChild(selDisabled)
+    </script>
+  </section>
+
+  <!-- ── TextArea ───────────────────────────────────────── -->
+  <section>
+    <h2>cl-textarea</h2>
+    <div class="row">
+      <cl-textarea label="Description" placeholder="Enter description…" rows="3" width="320px"></cl-textarea>
+      <cl-textarea label="Notes (no resize)" resize="none" rows="3" width="280px" helperText="Resize disabled"></cl-textarea>
+      <cl-textarea label="With error" value="Too short" error="Minimum 20 characters" rows="3" width="280px"></cl-textarea>
+    </div>
+  </section>
+
+  <!-- ── List ───────────────────────────────────────────── -->
+  <section>
+    <h2>cl-list</h2>
+    <div class="row" id="list-row"></div>
+    <output id="list-output">Click an item to select it</output>
+    <script type="module">
+      const row = document.getElementById('list-row')
+
+      // Unordered selectable list
+      const list1 = document.createElement('cl-list')
+      list1.setAttribute('selectable', 'true')
+      list1.setAttribute('dividers', 'true')
+      list1.setAttribute('width', '220px')
+      list1.items = [
+        { id: '1', label: 'Dashboard' },
+        { id: '2', label: 'Components' },
+        { id: '3', label: 'Design Tokens' },
+        { id: '4', label: 'Documentation' },
+      ]
+      list1.addEventListener('cl-select', (e) => {
+        document.getElementById('list-output').textContent = `Selected id: ${e.detail}`
+      })
+      row.appendChild(list1)
+
+      // Descriptive list
+      const list2 = document.createElement('cl-list')
+      list2.setAttribute('variant', 'descriptive')
+      list2.setAttribute('width', '260px')
+      list2.items = [
+        { id: 'a', label: 'Primary',   description: '#4F81F5 — main brand blue' },
+        { id: 'b', label: 'Secondary', description: '#7C6AF5 — soft violet' },
+        { id: 'c', label: 'Success',   description: '#34D399 — green' },
+      ]
+      row.appendChild(list2)
+    </script>
+  </section>
+</body>
+</html>

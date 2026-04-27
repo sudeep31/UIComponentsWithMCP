@@ -1,0 +1,23 @@
+{
+  "name": "NumberBox",
+  "tag": "cl-numberbox",
+  "description": "Numeric input with optional min/max/step constraints, label, helper text, and error display.",
+  "props": [
+    { "name": "label", "type": "string", "default": null, "description": "Field label" },
+    { "name": "placeholder", "type": "string", "default": null, "description": "Placeholder text" },
+    { "name": "value", "type": "number", "default": null, "description": "Controlled value" },
+    { "name": "min", "type": "number", "default": null, "description": "Minimum allowed value" },
+    { "name": "max", "type": "number", "default": null, "description": "Maximum allowed value" },
+    { "name": "step", "type": "number", "default": 1, "description": "Increment/decrement step" },
+    { "name": "error", "type": "string", "default": null, "description": "Validation error message" },
+    { "name": "helperText", "type": "string", "default": null, "description": "Helper text below input" },
+    { "name": "disabled", "type": "boolean", "default": false, "description": "Disables the input" },
+    { "name": "readOnly", "type": "boolean", "default": false, "description": "Read-only mode" },
+    { "name": "required", "type": "boolean", "default": false, "description": "Required field marker" },
+    { "name": "onChange", "type": "(value: number) => void", "default": null, "description": "Called with valueAsNumber on every change" }
+  ],
+  "snippets": {
+    "react": "import { NumberBox } from '@cl/react';\nimport { useState } from 'react';\n\nconst [qty, setQty] = useState(1);\n\n<NumberBox\n  label=\"Quantity\"\n  value={qty}\n  min={1}\n  max={99}\n  step={1}\n  onChange={setQty}\n/>",
+    "webcomponent": "<cl-numberbox label=\"Quantity\" min=\"1\" max=\"99\" step=\"1\"></cl-numberbox>\n\n<script>\n  document.querySelector('cl-numberbox').addEventListener('change', (e) => {\n    console.log('value:', e.detail);\n  });\n</script>"
+  }
+}

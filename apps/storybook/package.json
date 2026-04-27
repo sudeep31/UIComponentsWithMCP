@@ -1,0 +1,26 @@
+{
+  "name": "@cl/storybook",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build"
+  },
+  "packageManager": "pnpm@10.32.1",
+  "devDependencies": {
+    "@storybook/addon-a11y": "^8.6.18",
+    "@storybook/addon-essentials": "^8.6.18",
+    "@storybook/addon-interactions": "^8.6.18",
+    "@storybook/react": "^8.6.18",
+    "@storybook/react-vite": "^8.6.18",
+    "@vitejs/plugin-react": "^4.7.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "storybook": "^8.6.18",
+    "vite": "^6.4.2"
+  },
+  "dependencies": {
+    "@cl/react": "workspace:*",
+    "@cl/tokens": "workspace:*"
+  }
+}
