@@ -97,6 +97,55 @@ Once connected, Copilot Chat has access to 4 tools:
 
 ---
 
+## Running the Dev Tools
+
+### Storybook — Component Playground
+
+Storybook requires the component packages to be built first. Run these in order:
+
+```bash
+# Step 1 — build all packages (tokens → react → web-components)
+pnpm build
+
+# Step 2 — start Storybook (opens at http://localhost:6006)
+cd apps/storybook
+pnpm dev
+```
+
+> If you change a component, rebuild it (`pnpm build` from the root or run `pnpm dev` in the individual package for watch mode) then Storybook will hot-reload.
+
+**Watch mode per package** (run in separate terminals):
+
+```bash
+# Terminal 1 — watch React components
+cd packages/react
+pnpm dev
+
+# Terminal 2 — watch Web Components
+cd packages/web-components
+pnpm dev
+
+# Terminal 3 — Storybook
+cd apps/storybook
+pnpm dev
+```
+
+---
+
+### Docs Site — Docusaurus
+
+```bash
+# Development server with hot reload (http://localhost:3000)
+cd packages/docs
+pnpm start
+
+# Or build and preview the production site
+pnpm build
+pnpm serve
+```
+
+---
+
 ## Using the Web Components in Any Framework
 
 ```bash
