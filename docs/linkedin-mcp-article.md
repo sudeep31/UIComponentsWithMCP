@@ -28,8 +28,6 @@ In short, MCP turns your internal knowledge — component libraries, APIs, datab
 
 ---
 
-## The Problem This Project Solves
-
 Modern frontend teams build **design systems** — shared component libraries with dozens of components, each with their own props, variants, and usage rules.
 
 The pain is real: developers forget component names, mix up prop signatures, and waste time looking things up in Storybook or Figma. Onboarding new team members takes weeks, not days.
@@ -158,54 +156,170 @@ All 24 tests should pass. The server is now ready.
 
 ## How the MCP Server Works — The Code
 
-The entire server is about 80 lines of Python. Here is the key logic:
+The entire server is about 80 lines of Python. Here is the full code with a line-by-line explanation.
 
-**`mcp-server/main.py`** — The entry point. FastMCP decorators turn plain Python functions into AI-callable tools.
+### What is FastMCP?
+
+**FastMCP** is not FastAPI. They look similar but serve different purposes.
+
+**FastAPI** is a web framework — it creates HTTP servers with REST endpoints that browsers and apps call over a network.
+
+**FastMCP** is an MCP framework — it creates stdio servers that AI assistants call locally using the Model Context Protocol. No HTTP, no ports, no browser. VS Code spawns the Python process directly and communicates with it over standard input/output.
+
+The similarity is the decorator pattern. Both use `@app.tool()` or `@app.get()` style decorators. FastMCP borrows that developer-friendly style and applies it to the MCP protocol.
 
 ```python
-from fastmcp import FastMCP
-import json, pathlib
-
-mcp = FastMCP("CL Component Library")
-MANIFESTS = pathlib.Path(__file__).parent / "components" / "manifests"
-
-@mcp.tool()
-def list_components() -> list[str]:
-    """List all available CL components."""
-    return [f.stem for f in MANIFESTS.glob("*.json")]
-
-@mcp.tool()
-def get_component_props(component: str) -> dict:
-    """Get the props for a specific component."""
-    path = MANIFESTS / f"{component}.json"
-    return json.loads(path.read_text())
-
-@mcp.tool()
-def get_component_snippet(component: str, framework: str = "html") -> str:
-    """Get a ready-to-use code snippet for a component."""
-    props = get_component_props(component)
-    # ... snippet generation logic
-    return snippet
-
-if __name__ == "__main__":
-    mcp.run()
+from mcp.server.fastmcp import FastMCP
 ```
 
-**Component manifest** — `mcp-server/components/manifests/button.json`:
+This imports FastMCP from the official `mcp` Python package — the same package Anthropic publishes. `requirements.txt` contains just one line:
+
+```
+mcp>=1.0.0
+```
+
+That single package brings in everything the server needs — the protocol implementation, the stdio transport, and the FastMCP convenience layer.
+
+### Installing the Packages
+
+```bash
+cd mcp-server
+
+# Step 1: Create an isolated Python environment (so packages don't
+#         conflict with anything else on your machine)
+python -m venv .venv
+
+# Step 2: Activate the environment
+.venv\Scripts\activate        # Windows
+source .venv/bin/activate     # Mac / Linux
+
+# Step 3: Install everything listed in requirements.txt
+pip install -r requirements.txt
+```
+
+After this, `.venv/Scripts/python` is a standalone Python interpreter that has `mcp` installed. We point VS Code at this exact executable in `mcp.json` — that is why the path includes `.venv/Scripts/python`.
+
+### The Path Arguments Explained
+
+```python
+_SERVER_DIR      = Path(__file__).parent
+_WORKSPACE_ROOT  = _SERVER_DIR.parent
+_MANIFESTS_DIR   = _SERVER_DIR / "components" / "manifests"
+_TOKENS_FILE     = _WORKSPACE_ROOT / "packages" / "tokens" / "dist" / "tokens.json"
+```
+
+`Path(__file__)` is Python's way of saying "the file currently running". It does not matter where you launch Python from — `__file__` always refers to `main.py` itself.
+
+`.parent` moves one level up the folder tree. So:
+
+- `_SERVER_DIR` = the `mcp-server/` folder
+- `_WORKSPACE_ROOT` = the root of the whole project (one level above `mcp-server/`)
+- `_MANIFESTS_DIR` = `mcp-server/components/manifests/` — where the JSON files live
+- `_TOKENS_FILE` = `packages/tokens/dist/tokens.json` — the compiled design tokens
+
+This is important because VS Code can spawn the server from any working directory. Using `__file__` makes every path relative to where `main.py` lives, not where the user happens to be. The server always finds its files regardless of how it is launched.
+
+### The Server Instance
+
+```python
+mcp = FastMCP(
+    name="cl-components",
+    instructions=(
+        "You are an assistant for the CL Component Library. "
+        "Use list_components to discover available components, ..."
+    ),
+)
+```
+
+`name` is the identifier VS Code shows in the MCP panel. `instructions` is a system-level prompt that is sent to the AI every time it connects — it tells the AI what the server is for and how to use it. This is why Copilot Chat immediately knows to call `list_components` first without being told.
+
+### The Four Tools
+
+```python
+@mcp.tool()
+def list_components() -> list[dict]:
+    """List all available CL components."""
+    for manifest_path in sorted(_MANIFESTS_DIR.glob("*.json")):
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        result.append({ "name": data["name"], "tag": data["tag"],
+                         "description": data["description"] })
+    return result
+```
+
+`@mcp.tool()` registers this function as an AI-callable tool. The **docstring** becomes the tool's description — the AI reads it to decide when to call this function. The **return type hint** (`list[dict]`) tells the MCP framework how to validate and serialise the response.
+
+```python
+@mcp.tool()
+def get_component_props(component: str) -> list[dict]:
+    manifest = _load_manifest(component)
+    return manifest["props"]
+```
+
+The `component: str` argument becomes a required parameter the AI must provide. FastMCP reads the type hint and generates the JSON Schema for it automatically — no manual schema writing needed.
+
+```python
+@mcp.tool()
+def get_component_snippet(
+    component: str,
+    flavor: Literal["react", "webcomponent"] = "react",
+) -> str:
+    snippets = manifest.get("snippets", {})
+    return snippets[flavor]
+```
+
+`Literal["react", "webcomponent"]` restricts the argument to exactly those two values. FastMCP converts this into an enum in the JSON Schema, so the AI cannot pass an invalid value. The `= "react"` makes it optional with a sensible default.
+
+```python
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
+```
+
+`transport="stdio"` tells FastMCP to read JSON-RPC messages from standard input and write responses to standard output. This is the MCP stdio transport — the simplest way to connect an AI assistant to a local server without opening any network ports.
+
+### Component Manifest — `manifests/button.json`
 
 ```json
 {
   "name": "cl-button",
+  "tag": "cl-button",
   "description": "Primary action button with variant and loading support",
   "props": [
     { "name": "variant", "type": "string", "default": "primary" },
     { "name": "disabled", "type": "boolean", "default": false },
     { "name": "loading", "type": "boolean", "default": false }
-  ]
+  ],
+  "snippets": {
+    "react": "<Button variant=\"primary\">Label</Button>",
+    "webcomponent": "<cl-button variant=\"primary\">Label</cl-button>"
+  }
 }
 ```
 
-The pattern is the same for every component. Adding a new component means adding one JSON file — no changes to the server code.
+The manifest is the only place component knowledge lives. The Python server contains zero component-specific code — it just reads these files. Adding a new component to the library means adding one JSON file. No changes to `main.py` are ever needed.
+
+---
+
+## What Other Tools Can Be Added
+
+The four tools in this POC cover the basics. Here are eight real additions that would make the server production-ready:
+
+**`search_components(query: str)`** — fuzzy search across all component names and descriptions. Useful when a developer types "text input" and needs to find `cl-textbox`.
+
+**`validate_snippet(code: str, component: str)`** — checks whether a given snippet uses valid props for that component. The AI could call this automatically before returning code to the user.
+
+**`get_changelog(component: str)`** — reads a `CHANGELOG.md` per component and returns recent changes. Stops developers using deprecated props.
+
+**`get_accessibility_notes(component: str)`** — returns ARIA roles, keyboard behaviour, and screen-reader notes stored in the manifest. Useful for teams with accessibility requirements.
+
+**`get_design_tokens_for_component(component: str)`** — returns only the tokens used by a specific component (e.g. the exact colour and spacing tokens that style `cl-button`), rather than the full token catalogue.
+
+**`list_deprecated_props(component: str)`** — returns props that are still supported but scheduled for removal, so the AI can warn developers proactively.
+
+**`get_storybook_url(component: str)`** — returns the direct Storybook URL for a component. The AI can include it as a reference link in its answers.
+
+**`suggest_component(description: str)`** — given a plain-English description like "I need a dropdown with search", returns the most suitable component from the library. This uses simple keyword matching in the manifests — no separate AI model needed.
+
+Each of these follows the same pattern: a decorated Python function, a clear docstring, typed arguments, and a JSON-serialisable return value. The MCP framework handles everything else.
 
 ---
 
@@ -287,17 +401,6 @@ A few honest observations from building this POC:
 
 ---
 
-## When to Go Further
-
-This POC is a starting point. Here is how to extend it:
-
-- **Add a `search_components` tool** — fuzzy search across all manifest descriptions
-- **Connect to Figma** — sync design tokens automatically from your Figma library
-- **Publish to npm** — version-tag the packages and install like any other dependency
-- **Add a `validate_usage` tool** — let the AI check whether a component is being used correctly in a given file
-
----
-
 ## References
 
 - MCP Specification — [https://modelcontextprotocol.io](https://modelcontextprotocol.io)
@@ -311,4 +414,4 @@ This POC is a starting point. Here is how to extend it:
 
 ---
 
-_If this was useful, feel free to connect, share, or drop a comment. Happy to answer questions about the implementation._
+_If this was useful, feel free to connect, share, or drop a comment._
