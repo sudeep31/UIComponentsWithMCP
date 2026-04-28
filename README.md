@@ -16,14 +16,14 @@ The result: ask GitHub Copilot Chat _"give me a snippet for cl-button in Angular
 
 ## What's Inside
 
-| Package / App | What it does |
-|---|---|
-| `packages/tokens` | Design tokens — colours, spacing, typography (Style Dictionary) |
-| `packages/react` | 6 React components: Button, TextBox, NumberBox, Select, TextArea, List |
-| `packages/web-components` | Same 6 components as framework-agnostic Custom Elements |
-| `apps/storybook` | Interactive component playground |
-| `packages/docs` | Docusaurus documentation site |
-| `mcp-server/` | Python MCP server — exposes 4 AI tools to Copilot Chat |
+| Package / App             | What it does                                                           |
+| ------------------------- | ---------------------------------------------------------------------- |
+| `packages/tokens`         | Design tokens — colours, spacing, typography (Style Dictionary)        |
+| `packages/react`          | 6 React components: Button, TextBox, NumberBox, Select, TextArea, List |
+| `packages/web-components` | Same 6 components as framework-agnostic Custom Elements                |
+| `apps/storybook`          | Interactive component playground                                       |
+| `packages/docs`           | Docusaurus documentation site                                          |
+| `mcp-server/`             | Python MCP server — exposes 4 AI tools to Copilot Chat                 |
 
 ---
 
@@ -81,14 +81,15 @@ Reload VS Code → open GitHub Copilot Chat → ask anything about your componen
 
 Once connected, Copilot Chat has access to 4 tools:
 
-| Tool | What it returns |
-|---|---|
-| `list_components` | All available components with name and description |
-| `get_component_props` | Full prop schema for any component |
-| `get_component_snippet` | Ready-to-use React or Web Component code |
-| `get_design_tokens` | Design token values, optionally filtered by category |
+| Tool                    | What it returns                                      |
+| ----------------------- | ---------------------------------------------------- |
+| `list_components`       | All available components with name and description   |
+| `get_component_props`   | Full prop schema for any component                   |
+| `get_component_snippet` | Ready-to-use React or Web Component code             |
+| `get_design_tokens`     | Design token values, optionally filtered by category |
 
 **Example questions you can ask Copilot Chat:**
+
 - _"What components are available in the CL library?"_
 - _"Show me the props for cl-select"_
 - _"Give me a snippet for cl-button in Angular"_
@@ -103,6 +104,7 @@ npm link @cl/web-components   # or publish to npm and install normally
 ```
 
 **Plain HTML:**
+
 ```html
 <script type="module" src="./dist/custom-elements.js"></script>
 <link rel="stylesheet" href="./dist/custom-elements.css" />
@@ -110,9 +112,10 @@ npm link @cl/web-components   # or publish to npm and install normally
 ```
 
 **Angular:**
+
 ```typescript
 // main.ts
-import '@cl/web-components';
+import "@cl/web-components";
 // component decorator: schemas: [CUSTOM_ELEMENTS_SCHEMA]
 ```
 
@@ -162,4 +165,4 @@ UIComponentsWithMCP/
 
 ---
 
-*AI-generated · Directed and reviewed by **Sudeep Parchure** — April 2026*
+_AI-generated · Directed and reviewed by **Sudeep Parchure** — April 2026_
