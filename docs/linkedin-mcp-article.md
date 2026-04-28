@@ -1,6 +1,6 @@
 # Building an MCP Server for Your Custom Web Components
 
-**By Sudeep Parchure** — April 2026
+_AI-generated article · Directed and reviewed by **Sudeep Parchure** — April 2026_
 
 ---
 
